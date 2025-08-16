@@ -1,68 +1,67 @@
-# Advanced RAG App (Monorepo)
+# MapleLoom — Private RAG (Ollama + Qdrant + Meilisearch)
 
-A batteries-included, **extremely advanced** Retrieval-Augmented Generation (RAG) web app.
-Local-first by default with **Ollama** + **Qdrant** + **Meilisearch** (BM25-like) + **FastAPI** + **React (Vite + Tailwind)**. 
-Includes ingestion, hybrid retrieval (dense + sparse), reranking, LangGraph pipeline, feedback capture, and basic evaluation hooks.
+A precise, private RAG interface powered by **Ollama**, **Qdrant**, and **Meilisearch**.  
+Zero third-party calls (fully offline), source-anchored answers, and a minimal-latency UI.
 
-## Features
-- **Hybrid Retrieval:** Dense (Qdrant) + Sparse (Meilisearch)
-- **Multi-stage Reranking:** cross-encoder reranker (optional)
-- **Graph Orchestration:** LangGraph for query rewrite → retrieve → rerank → synthesize → cite
-- **Local LLM + Embeddings:** via Ollama (defaults: `llama3.1:8b`, `mxbai-embed-large`)
-- **Feedback Loop:** store thumbs-up/down & corrections to improve future answers
-- **Data Ingestion:** PDFs, Markdown, Text, Web URLs
-- **Frontend:** Fast chat UI with source cards and trace toggle
-- **Docker-first:** `docker compose up --build`
+> ✓ Works fully offline with Ollama (LLM + embeddings)  
+> ✓ Qdrant for vector search, Meilisearch for keyword search (optional)  
+> ✓ Nice web UI with inline references
 
 ---
 
-## Quick Start (Local, Docker)
-1. Install Docker & Docker Compose.
-2. Clone or unzip this project. Copy `.env.example` to `.env` and adjust if needed.
-3. Put your files in `./data` (supports `.pdf`, `.md`, `.txt`). You can run ingestion any time.
-4. Run:
-   ```bash
-   docker compose up --build
-   ```
-5. Open the app at http://localhost:5173 (web), API at http://localhost:8000/docs
+## ✨ Screenshots
 
-### Ingest your data
-With containers running, open a new terminal and run:
-```bash
-docker compose exec worker python -m ingest --path /workspace/data
-```
+> Put these images in `docs/images/` using the filenames below.
 
-### Test a query
-Use the web UI or:
-```bash
-curl -s http://localhost:8000/query -H 'Content-Type: application/json'   -d '{"query":"What is this repo about?"}'
-```
+| View | File |
+|---|---|
+| Answer with sources | `docs/images/app-answer-with-sources.png` |
+| Landing page | `docs/images/landing-page.png` |
+| Docs panel | `docs/images/docs-panel.png` |
+| Settings panel | `docs/images/settings-panel.png` |
+| (Troubleshooting) 502/Bad Gateway | `docs/images/setup-error-bad-gateway.jpeg` |
+| (Troubleshooting) Vector dim mismatch 1 | `docs/images/vector-dim-mismatch-1.jpeg` |
+| (Troubleshooting) Vector dim mismatch 2 | `docs/images/vector-dim-mismatch-2.jpeg` |
+
+![App](docs/images/landing-page.png)
 
 ---
 
-## One-Click-ish Deploy
-- **Vercel (web)**: the `apps/web` folder is a standard Vite app.
-- **Render/Fly/Any VM**: run docker compose on a small VM with ports exposed.
-- For fully-managed DBs, point `QDRANT_URL` and `MEILI_URL` at your providers.
+## 🧱 Architecture
+
+- **LLM/Embeddings:** Ollama (`OLLAMA_LLM`, `OLLAMA_EMBEDDINGS`)
+- **Vector DB:** Qdrant (collection = `RAG_COLLECTION`)
+- **Keyword:** Meilisearch (optional)
+- **API:** FastAPI (`apps/api`)
+- **Ingest/Worker:** `apps/worker`
+- **Web:** Vite/React (`apps/web`)
 
 ---
 
-## Repo Layout
-```
-apps/
-  api/       # FastAPI + LangGraph pipeline
-  worker/    # ingestion & evaluation
-  web/       # Vite + React + Tailwind chat UI
-packages/
-  shared/    # shared schemas/types
-data/        # put your PDFs, MD, TXT here
-docker-compose.yml
-.env.example
-```
+## 🚀 Quickstart
 
----
+### 1) `.env`
 
-## Notes
-- First run will download Ollama models; allow a few minutes.
-- To change models: set `OLLAMA_LLM` and `OLLAMA_EMBEDDINGS` in `.env`.
-- For OpenAI fallback, provide `OPENAI_API_KEY` and `OPENAI_MODEL`.
+Create a `.env` in the repo root:
+
+```env
+# Core
+RAG_COLLECTION=docs
+
+# Qdrant
+QDRANT_URL=http://qdrant:6333
+QDRANT_API_KEY=
+
+# Meilisearch
+MEILI_URL=http://meilisearch:7700
+MEILI_MASTER_KEY=devkey
+MEILI_INDEX=docs
+
+# Offline (Ollama)
+LLM_PROVIDER=ollama
+OLLAMA_LLM=llama3.1:8b
+# Use one of: mxbai-embed-large (1024 dims)  OR  nomic-embed-text:latest (768 dims)
+OLLAMA_EMBEDDINGS=mxbai-embed-large
+
+# Web
+VITE_API_URL=http://localhost:8000
