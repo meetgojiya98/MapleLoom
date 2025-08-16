@@ -1,0 +1,78 @@
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports: ["6333:6333"]
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    environment:
+      - MEILI_ENV=development
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
+    ports: ["7700:7700"]
+    volumes:
+      - meili_data:/meili_data
+
+  ollama:
+    image: ollama/ollama:latest
+    ports: ["11434:11434"]
+    # Persist models so you stay offline after the first pull
+    volumes:
+      - ollama_data:/root/.ollama
+
+  api:
+    build: ./apps/api
+    depends_on: [qdrant, meilisearch, ollama]
+    environment:
+      - RAG_COLLECTION=${RAG_COLLECTION}
+      - QDRANT_URL=${QDRANT_URL}
+      - QDRANT_API_KEY=${QDRANT_API_KEY}
+      # Meilisearch
+      - MEILI_URL=${MEILI_URL}
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
+      - MEILI_INDEX=${MEILI_INDEX}
+      # Offline LLM (Ollama)
+      - LLM_PROVIDER=${LLM_PROVIDER}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL}
+      - OLLAMA_LLM=${OLLAMA_LLM}
+      - OLLAMA_EMBEDDINGS=${OLLAMA_EMBEDDINGS}
+      - PORT=${PORT}
+    ports: ["8000:8000"]
+    volumes:
+      - ./packages/shared:/workspace/packages/shared:ro
+
+  worker:
+    build: ./apps/worker
+    depends_on: [qdrant, meilisearch, ollama]
+    environment:
+      - RAG_COLLECTION=${RAG_COLLECTION}
+      - QDRANT_URL=${QDRANT_URL}
+      - QDRANT_API_KEY=${QDRANT_API_KEY}
+      # Meilisearch
+      - MEILI_URL=${MEILI_URL}
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
+      - MEILI_INDEX=${MEILI_INDEX}
+      # Offline embeddings via Ollama
+      - LLM_PROVIDER=${LLM_PROVIDER}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL}
+      - OLLAMA_LLM=${OLLAMA_LLM}
+      - OLLAMA_EMBEDDINGS=${OLLAMA_EMBEDDINGS}
+    volumes:
+      - ./data:/workspace/data
+      - ./packages/shared:/workspace/packages/shared:ro
+    command: ["tail","-f","/dev/null"]
+
+  web:
+    build: ./apps/web
+    depends_on: [api]
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
+    ports: ["5173:5173"]
+    stdin_open: true
+    tty: true
+
+volumes:
+  qdrant_data:
+  meili_data:
+  ollama_data:

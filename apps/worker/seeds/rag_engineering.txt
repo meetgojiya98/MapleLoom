@@ -1,0 +1,8 @@
+# Curated RAG engineering documentation seeds
+https://python.langchain.com/docs/
+https://langchain-ai.github.io/langgraph/
+https://qdrant.tech/documentation/
+https://www.meilisearch.com/docs/
+https://ollama.com/docs
+https://docs.llamaindex.ai/
+https://docs.ragas.io/

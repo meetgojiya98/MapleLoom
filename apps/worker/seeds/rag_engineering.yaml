@@ -1,0 +1,36 @@
+seeds:
+  - https://python.langchain.com/docs/
+  - https://langchain-ai.github.io/langgraph/
+  - https://qdrant.tech/documentation/
+  - https://www.meilisearch.com/docs/
+  - https://ollama.com/docs
+  - https://docs.llamaindex.ai/
+  - https://docs.ragas.io/
+
+domain_whitelist:
+  - python.langchain.com
+  - langchain-ai.github.io
+  - qdrant.tech
+  - meilisearch.com
+  - ollama.com
+  - docs.llamaindex.ai
+  - docs.ragas.io
+
+allow_paths:
+  - '^/$'
+  - '^/docs'
+  - '^/documentation'
+deny_paths:
+  - '/changelog'
+  - '/tags'
+  - '/search'
+
+same_origin: true
+sitemap: true
+max_depth: 2
+max_pages: 400
+concurrency: 8
+delay: 0.6
+min_text_chars: 200
+out_dir: /workspace/data/crawl
+headers: {}
