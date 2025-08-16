@@ -9,24 +9,6 @@ Zero third-party calls (fully offline), source-anchored answers, and a minimal-l
 
 ---
 
-## ✨ Screenshots
-
-> Put these images in `docs/images/` using the filenames below.
-
-| View | File |
-|---|---|
-| Answer with sources | `docs/images/app-answer-with-sources.png` |
-| Landing page | `docs/images/landing-page.png` |
-| Docs panel | `docs/images/docs-panel.png` |
-| Settings panel | `docs/images/settings-panel.png` |
-| (Troubleshooting) 502/Bad Gateway | `docs/images/setup-error-bad-gateway.jpeg` |
-| (Troubleshooting) Vector dim mismatch 1 | `docs/images/vector-dim-mismatch-1.jpeg` |
-| (Troubleshooting) Vector dim mismatch 2 | `docs/images/vector-dim-mismatch-2.jpeg` |
-
-![App](docs/images/landing-page.png)
-
----
-
 ## 🧱 Architecture
 
 - **LLM/Embeddings:** Ollama (`OLLAMA_LLM`, `OLLAMA_EMBEDDINGS`)
