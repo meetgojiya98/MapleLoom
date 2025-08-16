@@ -272,16 +272,12 @@ docker compose logs -f api
 
 ---
 
-## 📸 Image Mapping
+## 📸 App Screenshots
 
-Rename your provided screenshots and place them at `docs/images/`:
+![screenshot 1](image.png)
 
-| Original file | New filename |
-|---|---|
-| `IMG_5BA4F83B-DDB7-4476-A21A-9004F173ACC6.jpeg` | `setup-error-bad-gateway.jpeg` |
-| `IMG_02EC37D6-DD12-42CA-8C25-D8F3A066046B.jpeg` | `vector-dim-mismatch-1.jpeg` |
-| `IMG_F183CE40-072C-4FD3-BB67-0DD1A9AECD98.jpeg` | `vector-dim-mismatch-2.jpeg` |
-| `Screenshot 2025-08-16 at 8.09.06 AM.png` | `app-answer-with-sources.png` |
-| `Screenshot 2025-08-16 at 8.09.17 AM.png` | `landing-page.png` |
-| `Screenshot 2025-08-16 at 8.09.29 AM.png` | `docs-panel.png` |
-| `Screenshot 2025-08-16 at 8.09.38 AM.png` | `settings-panel.png` |
+![screenshot 2](image-1.png)
+
+![screenshot 3](image-2.png)
+
+![screenshot 4](image-3.png)
